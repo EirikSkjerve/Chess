@@ -1,4 +1,5 @@
 import pygame 
+from board import Board
 '''
 Main loop for the window
 '''
@@ -23,7 +24,7 @@ def draw_board(board=None):
                 draw_dark = not draw_dark
 
 def main():
-    global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM
+    global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, board
     SCREEN_WIDTH = 1500
     SCREEN_HEIGHT = 1000
     dark_square_color = (64, 64, 64)
@@ -33,6 +34,9 @@ def main():
     OFFSET_X = 75
     OFFSET_Y = (SCREEN_HEIGHT-(8*SQUARE_SIZE))//2
     BOARD_DIM = SQUARE_SIZE*8
+    
+    board = Board()
+
     pygame.init()
 
     # SCREEN is now the "surface" object on which to draw on
