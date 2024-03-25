@@ -20,7 +20,7 @@ class Board:
 
     def set(self, coors, piece):
         x, y = self.strCoor_to_numCoor(coors)
-        if not(0 < x < 7) or not(0 < y < 7):
+        if not(0 <= x <= 7) or not(0 <= y <= 7):
             raise ValueError
         self.board[x][y] = piece
 
@@ -32,7 +32,11 @@ class Board:
         for row in self.board:
             print(row)
 
+class Tile():
 
+    def __init__(self, color, piece=None):
+        self.color = color
+        self.piece = piece
 
 if __name__ == "__main__":
     testBoard = Board()
