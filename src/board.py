@@ -15,13 +15,16 @@ class Board:
         black_tile = True
         letters = ['a','b','c','d','e','f','g','h']
 
-        for num in range(8):
+
+        for i, let in enumerate(letters[::-1]):
             black_tile = not black_tile
-            for i, let in enumerate(letters[::-1]):
+
+            for num in range(8):
                 tile = Tile("b" if black_tile else "w", let+str(num+1))
                 self.board[i][num] = tile
                 black_tile = not black_tile
-
+                if i == 0 or num == 3:
+                    tile.piece = "Pawn"
     def get(self,coors):
         x, y = self.strCoor_to_numCoor(coors)
         if not(0 < x < 7) or not(0 < y < 7):

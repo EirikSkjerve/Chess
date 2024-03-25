@@ -9,37 +9,39 @@ def menu():
 
 def draw_board():
 
-    # depending on what color the player is, this should be false/true for white/black
-    draw_dark = True
-    index_x = 0
-    index_y = 0
-    for x in range(OFFSET_X, BOARD_DIM + OFFSET_X, SQUARE_SIZE): 
-        draw_dark = not draw_dark
-        for y in range(OFFSET_Y, BOARD_DIM + OFFSET_Y, SQUARE_SIZE):
-            rect = pygame.Rect(x,y,SQUARE_SIZE, SQUARE_SIZE)
-            piece = gameboard.board[index_y][index_x]
+    font = pygame.font.Font('src/Utils/arial.ttf', 18)
+ 
+    for y in range(8):
+        for x in range(8):
+            # draw the square
+            rect = pygame.Rect(SQUARE_SIZE*(x)+OFFSET_X, SQUARE_SIZE*(y)+OFFSET_Y, SQUARE_SIZE, SQUARE_SIZE)
+            tile = gameboard.board[7-x][7-y]
+            pygame.draw.rect(SCREEN, dark_square_color if tile.color == "b" else light_square_color, rect, SQUARE_SIZE)
 
-            if draw_dark:
-                pygame.draw.rect(SCREEN, dark_square_color,rect,SQUARE_SIZE)
-                draw_dark = not draw_dark
-            else:
-                pygame.draw.rect(SCREEN, light_square_color,rect,SQUARE_SIZE)
-                draw_dark = not draw_dark
+            if y==7:
+                tileText = font.render(tile.coordinate[0], True, (255, 255, 255) if tile.color == "b" else (35, 35, 35))
+                # draw tile coordinates
+                tileTextRect = tileText.get_rect() 
+                tileTextRect.center = (SQUARE_SIZE*(x+1.5), SQUARE_SIZE*(y+0.85)+OFFSET_Y)
+                SCREEN.blit(tileText, tileTextRect)
+            if x==0:
+                tileText = font.render(tile.coordinate[1], True, (255, 255, 255) if tile.color == "b" else (35, 35, 35))
+                # draw tile coordinates
+                tileTextRect = tileText.get_rect() 
+                tileTextRect.center = (SQUARE_SIZE*(x)+OFFSET_X+13, SQUARE_SIZE*(y)+OFFSET_Y+17)
+                SCREEN.blit(tileText, tileTextRect)
 
-            if piece:
-                # do something to center it here
+            # TODO draw piece if piece on the tile
+            if tile.piece:
+                print(tile.coordinate)
                 piece_surf = pygame.Surface((SQUARE_SIZE-30, SQUARE_SIZE-30))
                 piece_surf.fill((50, 255, 50))
-                SCREEN.blit(piece_surf, (x, y))
-
-            index_y += 1
-        index_y = 0
-        index_x += 1
+                SCREEN.blit(piece_surf, (SQUARE_SIZE*x+OFFSET_X, SQUARE_SIZE*y+OFFSET_Y))
 
 def main():
     global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, gameboard
-    SCREEN_WIDTH = 1500
-    SCREEN_HEIGHT = 1000
+    SCREEN_WIDTH = 1920
+    SCREEN_HEIGHT = 1080
     dark_square_color = (64, 64, 64)
     light_square_color = (200, 200, 200)
 
@@ -49,11 +51,7 @@ def main():
     BOARD_DIM = SQUARE_SIZE*8
     
     gameboard = Board()
-    for i in range(5):
-        piece = Piece("Pawn", 10, f'a{i+1}', 'b')
-        gameboard.set(piece.position, piece)
     gameboard.print_board()
-    
     # initialize pygame instance
     pygame.init()
 
@@ -73,7 +71,6 @@ def main():
         SCREEN.fill((40, 40, 40))
 
         draw_board()
-        # for some reason this is needed to render on SCREEN
         pygame.display.update()
 
         # TODO display a menu
