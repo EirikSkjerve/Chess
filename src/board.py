@@ -12,6 +12,16 @@ class Board:
 
         self.let_to_num = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 
+        black_tile = True
+        letters = ['a','b','c','d','e','f','g','h']
+
+        for num in range(8):
+            black_tile = not black_tile
+            for i, let in enumerate(letters[::-1]):
+                tile = Tile("b" if black_tile else "w", let+str(num+1))
+                self.board[i][num] = tile
+                black_tile = not black_tile
+
     def get(self,coors):
         x, y = self.strCoor_to_numCoor(coors)
         if not(0 < x < 7) or not(0 < y < 7):
@@ -34,11 +44,11 @@ class Board:
 
 class Tile():
 
-    def __init__(self, color, piece=None):
+    def __init__(self, color, coordinate, piece=None):
         self.color = color
+        self.coordinate = coordinate
         self.piece = piece
 
 if __name__ == "__main__":
     testBoard = Board()
-    testBoard.set('b3', 'pawn')
     testBoard.print_board()
