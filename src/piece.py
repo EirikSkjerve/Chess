@@ -18,7 +18,7 @@ class Piece:
         self.set_image()
 
     def set_image(self):
-        path = "./Game/Images/"
+        path = "./Images/"
         match self.name:
             case "Pawn":
                 pass
