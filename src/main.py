@@ -1,5 +1,5 @@
 import pygame 
-from board import Board
+from Game.src.board import Board
 '''
 Main loop for the window
 '''
