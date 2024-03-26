@@ -1,6 +1,6 @@
 import pygame 
 from board import Board
-from piece import Piece
+from piece import Piece, Pawn
 
 '''
 Main loop for the window
@@ -35,8 +35,8 @@ def draw_board():
 
             if tile.piece is not None:
                 piece = tile.piece
-                #print(f"Piece {piece.name} on tile {tile.coordinate}")
-                #print(f"Valid moves: {gameboard.get_valid_moves(tile.coordinate)}")
+                print(f"Piece {piece.name} on tile {tile.coordinate}")
+                print(f"Valid moves: {gameboard.get_valid_moves(tile.coordinate)} \n")
                 piece_surf = pygame.Surface((SQUARE_SIZE//2, SQUARE_SIZE//2))
                 piece_surf.fill((50, 255, 50) if piece.color == "w" else (255,50,50))
                 SCREEN.blit(piece_surf, (tile_down-50, tile_right-50))
@@ -67,6 +67,8 @@ def main():
     # initialize the (empty) game board
     gameboard = Board(SQUARE_SIZE, OFFSET_X, OFFSET_Y)
     gameboard.print_board()
+    whitePawn = Pawn("w")
+    blackPawn = Pawn("b")
 
     # initialize pygame instance
     pygame.init()
