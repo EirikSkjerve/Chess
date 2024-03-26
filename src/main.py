@@ -35,11 +35,11 @@ def draw_board():
 
             if tile.piece is not None:
                 piece = tile.piece
-                print(f"Piece {piece.name} on tile {tile.coordinate}")
-                print(f"Valid moves: {gameboard.get_valid_moves(tile.coordinate)}")
-                piece_surf = pygame.Surface((SQUARE_SIZE-30, SQUARE_SIZE-30))
-                piece_surf.fill((50, 255, 50))
-                SCREEN.blit(piece_surf, (tile_left+10, tile_top+10))
+                #print(f"Piece {piece.name} on tile {tile.coordinate}")
+                #print(f"Valid moves: {gameboard.get_valid_moves(tile.coordinate)}")
+                piece_surf = pygame.Surface((SQUARE_SIZE//2, SQUARE_SIZE//2))
+                piece_surf.fill((50, 255, 50) if piece.color == "w" else (255,50,50))
+                SCREEN.blit(piece_surf, (tile_down-50, tile_right-50))
             
 def get_tile_clicked(event):
     event_dict = event.dict
