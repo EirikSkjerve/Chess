@@ -23,9 +23,9 @@ class Board:
             for num in range(8):
                 # the corner-coordinates of the tile
                 ul = (SQUARE_SIZE*i+OFFSET_X, SQUARE_SIZE*num+OFFSET_Y)
-                ur = (SQUARE_SIZE*(num+1)+OFFSET_X, SQUARE_SIZE*i+OFFSET_Y)
-                dl = (SQUARE_SIZE*num+OFFSET_X, SQUARE_SIZE*(i+1)+OFFSET_Y)
-                dr = (SQUARE_SIZE*(num+1)+OFFSET_X, SQUARE_SIZE*(i+1)+OFFSET_Y)
+                ur = (SQUARE_SIZE*(i+1)+OFFSET_X, SQUARE_SIZE*num+OFFSET_Y)
+                dl = (SQUARE_SIZE*i+OFFSET_X, SQUARE_SIZE*(num+1)+OFFSET_Y)
+                dr = (SQUARE_SIZE*(i+1)+OFFSET_X, SQUARE_SIZE*(num+1)+OFFSET_Y)
 
                 tile = Tile("b" if black_tile else "w", let+str(7-(num)+1), (ul, ur, dl, dr))
                 self.board[num][i] = tile
