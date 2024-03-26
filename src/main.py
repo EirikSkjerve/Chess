@@ -1,6 +1,7 @@
 import pygame 
 from board import Board
 from piece import Piece
+
 '''
 Main loop for the window
 '''
@@ -9,42 +10,29 @@ def menu():
 
 def draw_board():
 
-    font = pygame.font.Font('src/Utils/arial.ttf', 18)
- 
+    font = pygame.font.Font('C:/Users/eirik/OneDrive - University of Bergen/Chess/src/Utils/arial.ttf', 18)
+
     for y in range(8):
         for x in range(8):
-            # draw the square
-            #rect = pygame.Rect(SQUARE_SIZE*(x)+OFFSET_X, SQUARE_SIZE*(y)+OFFSET_Y, SQUARE_SIZE, SQUARE_SIZE)
-            tile = gameboard.board[7-x][7-y]
-            tile_topleft = tile.ul
-            tile_top, tile_left = tile_topleft
+            # draw the squares
+            tile = gameboard.board[x][y]
+            #print(tile.coordinate)
+            tile_top, tile_left = tile.ul
             rect = pygame.Rect(tile_top, tile_left, SQUARE_SIZE,SQUARE_SIZE)
             pygame.draw.rect(SCREEN, dark_square_color if tile.color == "b" else light_square_color, rect, SQUARE_SIZE)
 
-            '''
-            if y==7:
-                tileText = font.render(tile.coordinate[0], True, (255, 255, 255) if tile.color == "b" else (35, 35, 35))
-                # draw tile coordinates
-                tileTextRect = tileText.get_rect() 
-                tileTextRect.center = (SQUARE_SIZE*(x+1.5), SQUARE_SIZE*(y+0.85)+OFFSET_Y)
-                SCREEN.blit(tileText, tileTextRect)
-            if x==0:
-                tileText = font.render(tile.coordinate[1], True, (255, 255, 255) if tile.color == "b" else (35, 35, 35))
-                # draw tile coordinates
-                tileTextRect = tileText.get_rect() 
-                tileTextRect.center = (SQUARE_SIZE*(x)+OFFSET_X+13, SQUARE_SIZE*(y)+OFFSET_Y+17)
-                SCREEN.blit(tileText, tileTextRect)
+            # draw coordinate
+            tileText = font.render(tile.coordinate, True, (255, 255, 255) if tile.color == "b" else (35, 35, 35))
+            tileTextRect = tileText.get_rect() 
+            tileTextRect.center = (tile_top+10, tile_left+10)
+            SCREEN.blit(tileText, tileTextRect)
+            
+            
 
-            # TODO draw piece if piece on the tile
-            if tile.piece:
-                piece_surf = pygame.Surface((SQUARE_SIZE-30, SQUARE_SIZE-30))
-                piece_surf.fill((50, 255, 50))
-                SCREEN.blit(piece_surf, (SQUARE_SIZE*x+OFFSET_X, SQUARE_SIZE*y+OFFSET_Y))
-            '''
 def main():
-    global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, gameboard
-    SCREEN_WIDTH = 1920
-    SCREEN_HEIGHT = 1080
+    global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, gameboard, font
+    SCREEN_WIDTH = 1300
+    SCREEN_HEIGHT = 700
     dark_square_color = (64, 64, 64)
     light_square_color = (200, 200, 200)
 
@@ -56,6 +44,10 @@ def main():
     # initialize the (empty) game board
     gameboard = Board(SQUARE_SIZE, OFFSET_X, OFFSET_Y)
     gameboard.print_board()
+    for x in range(8):
+        for y in range(8):
+            tile = gameboard.board[y][x]
+    # initialize the font to be used
 
     # initialize pygame instance
     pygame.init()
