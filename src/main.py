@@ -24,11 +24,14 @@ def draw_board():
             # draw the square with correct color
             pygame.draw.rect(SCREEN, dark_square_color if tile.color == "b" else light_square_color, rect, SQUARE_SIZE)
 
+            tile_down, tile_right = tile.dr
             # draw coordinate on each tile
             tileText = font.render(tile.coordinate, True, (255, 255, 255) if tile.color == "b" else (35, 35, 35))
             tileTextRect = tileText.get_rect() 
-            tileTextRect.center = (tile_top+10, tile_left+10)
+            tileTextRect.center = (tile_down-10, tile_right-10)
             SCREEN.blit(tileText, tileTextRect)
+
+            # TODO draw pieces
             
 def get_tile_clicked(event):
     event_dict = event.dict
