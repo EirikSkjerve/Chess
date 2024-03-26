@@ -15,20 +15,32 @@ def draw_board():
     for y in range(8):
         for x in range(8):
             # draw the squares
+            # get the tile object
             tile = gameboard.board[x][y]
-            #print(tile.coordinate)
+            # get its coordinates
             tile_top, tile_left = tile.ul
+            # create the square for this tile
             rect = pygame.Rect(tile_top, tile_left, SQUARE_SIZE,SQUARE_SIZE)
+            # draw the square with correct color
             pygame.draw.rect(SCREEN, dark_square_color if tile.color == "b" else light_square_color, rect, SQUARE_SIZE)
 
-            # draw coordinate
+            # draw coordinate on each tile
             tileText = font.render(tile.coordinate, True, (255, 255, 255) if tile.color == "b" else (35, 35, 35))
             tileTextRect = tileText.get_rect() 
             tileTextRect.center = (tile_top+10, tile_left+10)
             SCREEN.blit(tileText, tileTextRect)
             
-            
-
+def get_tile_clicked(event):
+    event_dict = event.dict
+    mouse_pos_x, mouse_pos_y = event_dict.get('pos')
+    for i in range(len(gameboard.board)):
+        for j in range(len(gameboard.board[i])):
+            tile = gameboard.board[i][j]
+            ul, dr = tile.ul, tile.dr
+            x1,y1 = ul
+            x2,y2 = dr
+            if x1 < mouse_pos_x < x2 and y1 < mouse_pos_y < y2:
+                return(tile.coordinate)
 def main():
     global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, gameboard, font
     SCREEN_WIDTH = 1300
@@ -44,10 +56,6 @@ def main():
     # initialize the (empty) game board
     gameboard = Board(SQUARE_SIZE, OFFSET_X, OFFSET_Y)
     gameboard.print_board()
-    for x in range(8):
-        for y in range(8):
-            tile = gameboard.board[y][x]
-    # initialize the font to be used
 
     # initialize pygame instance
     pygame.init()
@@ -58,11 +66,14 @@ def main():
     running = True
     while running:
         
+        tile_cliked_down = None
+        tile_released = None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN:
-                print(event.type)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                tile_cliked_down = get_tile_clicked(event)
+                print(f"Tile clicked: {tile_cliked_down}")
 
         # fill the base color in the window
         SCREEN.fill((40, 40, 40))
