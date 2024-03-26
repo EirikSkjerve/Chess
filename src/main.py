@@ -1,6 +1,6 @@
 import pygame 
 from board import Board
-from piece import Piece, Pawn
+from piece import Piece, Pawn, Bishop, Rook
 
 '''
 Main loop for the window
@@ -24,6 +24,12 @@ def draw_board():
             # draw the square with correct color
             pygame.draw.rect(SCREEN, dark_square_color if tile.color == "b" else light_square_color, rect, SQUARE_SIZE)
 
+            # mark possible moves if a piece is clicked
+            if move_indicator and tile.coordinate in move_indicator:
+                indicator_surf = pygame.Surface((SQUARE_SIZE, SQUARE_SIZE))
+                indicator_surf.fill((60,60,200) if tile.color == "w" else (40,40,200))
+                SCREEN.blit(indicator_surf, (tile_top, tile_left))
+
             tile_down, tile_right = tile.dr
             # draw coordinate on each tile
             tileText = font.render(tile.coordinate, True, (255, 255, 255) if tile.color == "b" else (35, 35, 35))
@@ -31,14 +37,18 @@ def draw_board():
             tileTextRect.center = (tile_down-10, tile_right-10)
             SCREEN.blit(tileText, tileTextRect)
 
-            # TODO draw pieces
-
             if tile.piece is not None:
                 piece = tile.piece
                 piece_surf = pygame.Surface((SQUARE_SIZE//2, SQUARE_SIZE//2))
                 piece_surf.fill((50, 255, 50) if piece.color == "w" else (255,50,50))
                 SCREEN.blit(piece_surf, (tile_down-50, tile_right-50))
-            
+
+                # display name of piece
+                piece_text = font.render(piece.name[:1], True, (255,255,255) if piece.color == "b" else (10,10,10))
+                piece_text_rect = piece_text.get_rect()
+                piece_text_rect.center = (tile_down-35, tile_right-35)
+                SCREEN.blit(piece_text, piece_text_rect)
+
 def get_tile_clicked(event):
     event_dict = event.dict
     mouse_pos_x, mouse_pos_y = event_dict.get('pos')
@@ -56,9 +66,15 @@ def handle_tile_click(tile_cliked):
     if tile.piece:
         piece = tile.piece
         print(f"Piece {piece.name} on tile {tile.coordinate}. Valid moves are: {', '.join(gameboard.get_valid_moves(tile.coordinate))}")
+        move_indicator.clear()
+        for x in gameboard.get_valid_moves(tile.coordinate):
+            move_indicator.append(x)
+
+    else:
+        move_indicator.clear()
 
 def main():
-    global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, gameboard, font
+    global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, gameboard, font, move_indicator
     SCREEN_WIDTH = 1300
     SCREEN_HEIGHT = 700
     dark_square_color = (64, 64, 64)
@@ -69,14 +85,21 @@ def main():
     OFFSET_Y = (SCREEN_HEIGHT-(8*SQUARE_SIZE))//2
     BOARD_DIM = SQUARE_SIZE*8
     
+    move_indicator = []
+
     # initialize the (empty) game board
     gameboard = Board(SQUARE_SIZE, OFFSET_X, OFFSET_Y)
     whitePawn = Pawn("w")
     blackPawn = Pawn("b")
-
-    gameboard.board[3][2].set_piece(whitePawn)
+    whiteRook = Rook("w")
+    blackBishop = Bishop("b")
+    gameboard.board[3][1].set_piece(whitePawn)
     gameboard.board[2][3].set_piece(blackPawn)
     gameboard.board[4][3].set_piece(blackPawn)
+    gameboard.board[5][2].set_piece(whiteRook)
+    gameboard.board[6][4].set_piece(blackBishop)
+    gameboard.board[3][3].set_piece(blackBishop)
+    gameboard.board[1][2].set_piece(blackBishop)
 
     # initialize pygame instance
     pygame.init()
@@ -85,10 +108,11 @@ def main():
     SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     running = True
+    turn = 0  # 0 for white, 1 for black
+
     while running:
         
         tile_cliked_down = None
-        tile_released = None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
