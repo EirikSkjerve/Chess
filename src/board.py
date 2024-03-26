@@ -30,16 +30,14 @@ class Board:
                 dl = (SQUARE_SIZE*i+OFFSET_X, SQUARE_SIZE*(7-num+1)+OFFSET_Y)
                 dr = (SQUARE_SIZE*(i+1)+OFFSET_X, SQUARE_SIZE*(7-num+1)+OFFSET_Y)
 
-                if (i==1 or i ==2 or i==4) and (num == 1 or num == 4):
-                    testPawn = Pawn("w" if not black_tile else "b")
-                    tile = Tile("b" if black_tile else "w", let+str((num)+1), (ul, ur, dl, dr), piece=testPawn)
-                else:
-                    tile = Tile("b" if black_tile else "w", let+str((num)+1), (ul, ur, dl, dr))
+                
+                tile = Tile("b" if black_tile else "w", let+str((num)+1), (ul, ur, dl, dr))
 
                 self.board[i][num] = tile
                 black_tile = not black_tile
 
     def get(self,coors):
+        print(f"Coors input: {coors}")
         x, y = self.strCoor_to_numCoor(coors)
         if not(0 <= x <= 7) or not(0 <= y <= 7):
             raise ValueError
@@ -73,18 +71,34 @@ class Board:
             return
         match piece.name:
             case "Pawn":
+                diag_l = self.board[piece_x-1][piece_y]
+                diag_r = self.board[piece_x-1][piece_y]
                 if piece.color=="b":
-                    if piece_y==1:
-                        valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y-2)))
-                    if not self.get(piece_x, piece_y-1):
-                        pass
-                if piece.color=="w":
-                    if piece_y==1:
-                        valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y+2)))
-                    if not self.get(piece_x, piece_y-1):
-                        pass
 
-                pass
+                    # check if there is a piece in front of the pawn
+                    if not self.board[piece_x][piece_y-1].piece:
+                        # pawn moves 2 squares on first move
+                        if piece_y==6:
+                            valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y-2)))
+                        # pawn moves 1 square forward
+                        valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y-1)))
+
+                if piece.color=="w":
+
+                    if not self.board[piece_x][piece_y+1].piece:
+
+                        # pawn moves 2 squares on first move
+                        if piece_y==1:
+                            valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y+2)))
+                        # pawn moves 1 square forward
+                        valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y+1)))
+
+
+                if diag_l.piece and diag_l.piece.color != piece.color:
+                    valid_moves.append(diag_l.coordinate)
+                if diag_r.piece and diag_r.piece.color != piece.color:
+                    valid_moves.append(diag_r.coordinate)
+
             case "Knight":
                 pass
             case "Bishop":
@@ -117,3 +131,6 @@ class Tile():
         self.ur = ur  # up right
         self.dl = dl  # down left
         self.dr = dr  # down right
+
+    def set_piece(self, piece):
+        self.piece = piece
