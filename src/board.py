@@ -15,7 +15,7 @@ class Board:
         self.let_to_num = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
         self.num_to_let = {0:'a', 1:'b',2:'c',3:'d',4:'e',5:'f',6:'g',7:'h'}
 
-        black_tile = True
+        black_tile = False
         letters = ['a','b','c','d','e','f','g','h']
 
         for i, let in enumerate(letters):
@@ -25,16 +25,18 @@ class Board:
 
             for num in range(8):
                 # the corner-coordinates of the tile
-                ul = (SQUARE_SIZE*i+OFFSET_X, SQUARE_SIZE*num+OFFSET_Y)
-                ur = (SQUARE_SIZE*(i+1)+OFFSET_X, SQUARE_SIZE*num+OFFSET_Y)
-                dl = (SQUARE_SIZE*i+OFFSET_X, SQUARE_SIZE*(num+1)+OFFSET_Y)
-                dr = (SQUARE_SIZE*(i+1)+OFFSET_X, SQUARE_SIZE*(num+1)+OFFSET_Y)
+                ul = (SQUARE_SIZE*i+OFFSET_X, SQUARE_SIZE*(7-num)+OFFSET_Y)
+                ur = (SQUARE_SIZE*(i+1)+OFFSET_X, SQUARE_SIZE*(7-num)+OFFSET_Y)
+                dl = (SQUARE_SIZE*i+OFFSET_X, SQUARE_SIZE*(7-num+1)+OFFSET_Y)
+                dr = (SQUARE_SIZE*(i+1)+OFFSET_X, SQUARE_SIZE*(7-num+1)+OFFSET_Y)
 
-                tile = Tile("b" if black_tile else "w", let+str((num)+1), (ul, ur, dl, dr))
-                if i==1 and num == 1:
-                    testPawn = Pawn("w")
+                if (i==1 or i ==2 or i==4) and (num == 1 or num == 4):
+                    testPawn = Pawn("w" if not black_tile else "b")
                     tile = Tile("b" if black_tile else "w", let+str((num)+1), (ul, ur, dl, dr), piece=testPawn)
-                self.board[num][i] = tile
+                else:
+                    tile = Tile("b" if black_tile else "w", let+str((num)+1), (ul, ur, dl, dr))
+
+                self.board[i][num] = tile
                 black_tile = not black_tile
 
     def get(self,coors):
@@ -54,8 +56,8 @@ class Board:
         return (x, y)
 
     def numCoor_to_strCoor(self, coors):
-        y, x = coors
-        return self.num_to_let.get(y) + str(x+1)
+        x, y = coors
+        return self.num_to_let.get(x) + str(y+1)
 
     def get_valid_moves(self, piece_coor):
         '''
@@ -74,11 +76,13 @@ class Board:
                 if piece.color=="b":
                     if piece_y==1:
                         valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y-2)))
+                    if not self.get(piece_x, piece_y-1):
+                        pass
                 if piece.color=="w":
-                    print(f"Piece y: {piece_y}")
                     if piece_y==1:
-                        print(f"White pawn can move 2 forward")
                         valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y+2)))
+                    if not self.get(piece_x, piece_y-1):
+                        pass
 
                 pass
             case "Knight":
