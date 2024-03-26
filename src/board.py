@@ -105,14 +105,59 @@ class Board:
                         self.add_if_not_check(valid_moves, diag_r.coordinate)
 
 
-
-
             case "Knight":
                 pass
             case "Bishop":
-                pass
+                # I don't know how to implement this without caffeine
+                diagonals = []
+                for i in range(piece_x+1, 8):
+                    diag = self.board[i][piece_y+i]
+                    diagonals.append(diag)
+                for x in range(piece_x-1,-1,-1):
+                    pass
+
             case "Rook":
-                pass
+                # check to the right
+                for i in range(piece_x+1, 8):
+                    
+                    if self.board[i][piece_y].piece and self.board[i][piece_y].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (i, piece_y))
+                    # cannot move through another piece
+                    if self.board[i][piece_y].piece:
+                        break
+
+                # check to the left
+                for i in range(piece_x-1, -1, -1):
+                    if self.board[i][piece_y].piece and self.board[i][piece_y].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (i, piece_y))
+                    if self.board[i][piece_y].piece:
+                        break
+
+                # check upwards
+                for j in range(piece_y+1, 8):
+ 
+                    if self.board[piece_x][j].piece and self.board[i][piece_y].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (piece_x, j))
+                    if self.board[piece_x][j].piece:
+                        break
+
+                # check below
+                for j in range(piece_y-1, -1,-1):
+                    if self.board[piece_x][j].piece and self.board[i][piece_y].piece.color == piece.color:
+                        break
+
+
+                    self.add_if_not_check(valid_moves, (piece_x, j))
+                    if self.board[piece_x][j].piece:
+                        break
+
+
             case "Queen":
                 pass
             case "King":
