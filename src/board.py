@@ -19,8 +19,7 @@ class Board:
         letters = ['a','b','c','d','e','f','g','h']
 
         for i, let in enumerate(letters):
-            print(i)
-
+            # bool to keep track of black/white tiles
             black_tile = not black_tile
 
             for num in range(8):
@@ -37,7 +36,6 @@ class Board:
                 black_tile = not black_tile
 
     def get(self,coors):
-        print(f"Coors input: {coors}")
         x, y = self.strCoor_to_numCoor(coors)
         if not(0 <= x <= 7) or not(0 <= y <= 7):
             raise ValueError
@@ -71,33 +69,43 @@ class Board:
             return
         match piece.name:
             case "Pawn":
-                diag_l = self.board[piece_x-1][piece_y]
-                diag_r = self.board[piece_x-1][piece_y]
-                if piece.color=="b":
 
+                if piece.color=="b":
+                    diag_l = self.board[piece_x-1][piece_y-1]
+                    diag_r = self.board[piece_x+1][piece_y-1]
                     # check if there is a piece in front of the pawn
                     if not self.board[piece_x][piece_y-1].piece:
                         # pawn moves 2 squares on first move
                         if piece_y==6:
-                            valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y-2)))
+                            self.add_if_not_check(valid_moves, (piece_x, piece_y-2))
                         # pawn moves 1 square forward
-                        valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y-1)))
+                        self.add_if_not_check(valid_moves, (piece_x, piece_y-1))
+
+                    # if diagonal piece is of opposite color, pawn can take
+                    if diag_l.piece and diag_l.piece.color != piece.color:
+                        self.add_if_not_check(valid_moves, diag_l.coordinate)
+                    if diag_r.piece and diag_r.piece.color != piece.color:
+                        self.add_if_not_check(valid_moves, diag_r.coordinate)
 
                 if piece.color=="w":
-
+                    diag_l = self.board[piece_x-1][piece_y+1]
+                    diag_r = self.board[piece_x+1][piece_y+1]
                     if not self.board[piece_x][piece_y+1].piece:
 
                         # pawn moves 2 squares on first move
                         if piece_y==1:
-                            valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y+2)))
+                            self.add_if_not_check(valid_moves, (piece_x, piece_y+2))
                         # pawn moves 1 square forward
-                        valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y+1)))
+                        self.add_if_not_check(valid_moves, (piece_x, piece_y+1))
+
+                    # if diagonal piece is of opposite color, pawn can take
+                    if diag_l.piece and diag_l.piece.color != piece.color:
+                        self.add_if_not_check(valid_moves, diag_l.coordinate)
+                    if diag_r.piece and diag_r.piece.color != piece.color:
+                        self.add_if_not_check(valid_moves, diag_r.coordinate)
 
 
-                if diag_l.piece and diag_l.piece.color != piece.color:
-                    valid_moves.append(diag_l.coordinate)
-                if diag_r.piece and diag_r.piece.color != piece.color:
-                    valid_moves.append(diag_r.coordinate)
+
 
             case "Knight":
                 pass
@@ -114,6 +122,14 @@ class Board:
 
     def get_all_valid_moves(self, color):
         pass
+
+    # adds a move to the list if the move does not introduce check to the color's king
+    def add_if_not_check(self, moves, move):
+        # TODO implement checking for check when king is implemented
+        if type(move)==str:
+            moves.append(move)
+        else:
+            moves.append(self.numCoor_to_strCoor(move))
 
     def print_board(self):
         for row in self.board:

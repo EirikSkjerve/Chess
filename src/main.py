@@ -35,8 +35,6 @@ def draw_board():
 
             if tile.piece is not None:
                 piece = tile.piece
-                print(f"Piece {piece.name} on tile {tile.coordinate}")
-                print(f"Valid moves: {gameboard.get_valid_moves(tile.coordinate)} \n")
                 piece_surf = pygame.Surface((SQUARE_SIZE//2, SQUARE_SIZE//2))
                 piece_surf.fill((50, 255, 50) if piece.color == "w" else (255,50,50))
                 SCREEN.blit(piece_surf, (tile_down-50, tile_right-50))
@@ -52,6 +50,13 @@ def get_tile_clicked(event):
             x2,y2 = dr
             if x1 < mouse_pos_x < x2 and y1 < mouse_pos_y < y2:
                 return(tile.coordinate)
+
+def handle_tile_click(tile_cliked):
+    tile = gameboard.get(tile_cliked)
+    if tile.piece:
+        piece = tile.piece
+        print(f"Piece {piece.name} on tile {tile.coordinate}. Valid moves are: {', '.join(gameboard.get_valid_moves(tile.coordinate))}")
+
 def main():
     global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, gameboard, font
     SCREEN_WIDTH = 1300
@@ -66,9 +71,12 @@ def main():
     
     # initialize the (empty) game board
     gameboard = Board(SQUARE_SIZE, OFFSET_X, OFFSET_Y)
-    gameboard.print_board()
     whitePawn = Pawn("w")
     blackPawn = Pawn("b")
+
+    gameboard.board[3][2].set_piece(whitePawn)
+    gameboard.board[2][3].set_piece(blackPawn)
+    gameboard.board[4][3].set_piece(blackPawn)
 
     # initialize pygame instance
     pygame.init()
@@ -86,8 +94,7 @@ def main():
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 tile_cliked_down = get_tile_clicked(event)
-                print(f"Tile clicked: {tile_cliked_down}")
-
+                handle_tile_click(tile_cliked_down)
         # fill the base color in the window
         SCREEN.fill((40, 40, 40))
 
