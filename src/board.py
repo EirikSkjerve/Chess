@@ -108,13 +108,59 @@ class Board:
             case "Knight":
                 pass
             case "Bishop":
-                # I don't know how to implement this without caffeine
-                diagonals = []
                 for i in range(piece_x+1, 8):
-                    diag = self.board[i][piece_y+i]
-                    diagonals.append(diag)
-                for x in range(piece_x-1,-1,-1):
-                    pass
+                    
+                    y_temp = piece_y+(piece_x-i)
+                    if not (0 <= y_temp <= 7):
+                        continue
+                    if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (i, y_temp))
+                    # cannot move through another piece
+                    if self.board[i][y_temp].piece:
+                        break
+
+                for i in range(piece_x-1, -1,-1):
+                    
+                    y_temp = piece_y-(piece_x-i)
+                    if not (0 <= y_temp <= 7):
+                        continue
+                    if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (i, y_temp))
+                    # cannot move through another piece
+                    if self.board[i][y_temp].piece:
+                        break
+
+                for i in range(piece_x+1, 8):
+                    
+                    y_temp = piece_y-(piece_x-i)
+                    if not (0 <= y_temp <= 7):
+                        continue
+                    if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (i, y_temp))
+                    # cannot move through another piece
+                    if self.board[i][y_temp].piece:
+                        break
+
+                for i in range(piece_x-1, -1,-1):
+                    
+                    y_temp = piece_y+(piece_x-i)
+                    if not (0 <= y_temp <= 7):
+                        continue
+                    if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (i, y_temp))
+                    # cannot move through another piece
+                    if self.board[i][y_temp].piece:
+                        break
+
+
 
             case "Rook":
                 # check to the right
