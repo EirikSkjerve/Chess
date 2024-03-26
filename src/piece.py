@@ -1,19 +1,15 @@
 class Piece:
 
-    def __init__(self, name, value, position, color):
+    def __init__(self, name, value, color):
         
         '''
-        Initializes a piece on the board
-
         Inputs: 
         name of piece (string)
         value of piece (int)
-        position of piece (tuple)
         
         '''
         self.name = name
         self.value = value
-        self.position = position
         self.color = color
         self.set_image()
 
@@ -35,3 +31,28 @@ class Piece:
 
         path += "Untitled.png"
         self.image = path
+
+class Pawn(Piece):
+    def __init__(self, color):
+        self.name = "Pawn"
+        self.color = color
+
+class Knight(Piece):
+    def __init__(self):
+        pass
+
+class Bishop(Piece):
+    def __init__(self):
+        pass
+
+class Rook(Piece):
+    def __init__(self):
+        pass
+
+class Queen(Piece):
+    def __init__(self):
+        pass
+
+class King(Piece):
+    def __init__(self):
+        pass

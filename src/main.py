@@ -32,6 +32,14 @@ def draw_board():
             SCREEN.blit(tileText, tileTextRect)
 
             # TODO draw pieces
+
+            if tile.piece is not None:
+                piece = tile.piece
+                print(f"Piece {piece.name} on tile {tile.coordinate}")
+                print(f"Valid moves: {gameboard.get_valid_moves(tile.coordinate)}")
+                piece_surf = pygame.Surface((SQUARE_SIZE-30, SQUARE_SIZE-30))
+                piece_surf.fill((50, 255, 50))
+                SCREEN.blit(piece_surf, (tile_left+10, tile_top+10))
             
 def get_tile_clicked(event):
     event_dict = event.dict

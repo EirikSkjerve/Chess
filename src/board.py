@@ -1,3 +1,5 @@
+from piece import Piece, Pawn
+
 class Board:
 
     def __init__(self, SQUARE_SIZE, OFFSET_X, OFFSET_Y):
@@ -11,6 +13,7 @@ class Board:
                       [None]*8]
 
         self.let_to_num = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
+        self.num_to_let = {0:'a', 1:'b',2:'c',3:'d',4:'e',5:'f',6:'g',7:'h'}
 
         black_tile = True
         letters = ['a','b','c','d','e','f','g','h']
@@ -27,13 +30,16 @@ class Board:
                 dl = (SQUARE_SIZE*i+OFFSET_X, SQUARE_SIZE*(num+1)+OFFSET_Y)
                 dr = (SQUARE_SIZE*(i+1)+OFFSET_X, SQUARE_SIZE*(num+1)+OFFSET_Y)
 
-                tile = Tile("b" if black_tile else "w", let+str(7-(num)+1), (ul, ur, dl, dr))
+                tile = Tile("b" if black_tile else "w", let+str((num)+1), (ul, ur, dl, dr))
+                if i==1 and num == 1:
+                    testPawn = Pawn("w")
+                    tile = Tile("b" if black_tile else "w", let+str((num)+1), (ul, ur, dl, dr), piece=testPawn)
                 self.board[num][i] = tile
                 black_tile = not black_tile
 
     def get(self,coors):
         x, y = self.strCoor_to_numCoor(coors)
-        if not(0 < x < 7) or not(0 < y < 7):
+        if not(0 <= x <= 7) or not(0 <= y <= 7):
             raise ValueError
         return self.board[x][y]
 
@@ -44,8 +50,52 @@ class Board:
         self.board[x][y] = piece
 
     def strCoor_to_numCoor(self, coors):
-        x, y = 7-(int(coors[1])-1) ,self.let_to_num.get(coors[0])
+        y, x = (int(coors[1])-1) ,self.let_to_num.get(coors[0])
         return (x, y)
+
+    def numCoor_to_strCoor(self, coors):
+        y, x = coors
+        return self.num_to_let.get(y) + str(x+1)
+
+    def get_valid_moves(self, piece_coor):
+        '''
+        Get valid moves for a piece on a given coordinate
+        piece as input
+        '''
+        valid_moves = []
+        piece_x, piece_y = self.strCoor_to_numCoor(piece_coor)
+        tile = self.board[piece_x][piece_y]
+        piece = tile.piece
+        if not piece:
+            print(f"Not a piece here")
+            return
+        match piece.name:
+            case "Pawn":
+                if piece.color=="b":
+                    if piece_y==1:
+                        valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y-2)))
+                if piece.color=="w":
+                    print(f"Piece y: {piece_y}")
+                    if piece_y==1:
+                        print(f"White pawn can move 2 forward")
+                        valid_moves.append(self.numCoor_to_strCoor((piece_x, piece_y+2)))
+
+                pass
+            case "Knight":
+                pass
+            case "Bishop":
+                pass
+            case "Rook":
+                pass
+            case "Queen":
+                pass
+            case "King":
+                pass
+        
+        return valid_moves
+
+    def get_all_valid_moves(self, color):
+        pass
 
     def print_board(self):
         for row in self.board:
