@@ -42,12 +42,14 @@ class Knight(Piece):
         pass
 
 class Bishop(Piece):
-    def __init__(self):
-        pass
+    def __init__(self, color):
+        self.name = "Bishop"
+        self.color = color
 
 class Rook(Piece):
-    def __init__(self):
-        pass
+    def __init__(self, color):
+        self.name = "Rook"
+        self.color = color
 
 class Queen(Piece):
     def __init__(self):
