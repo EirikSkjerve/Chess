@@ -125,7 +125,25 @@ class Board:
 
 
             case "Knight":
-                pass
+                moves = [(piece_x+2, piece_y-1), 
+                         (piece_x+2, piece_y+1),
+                         (piece_x-2, piece_y-1),
+                         (piece_x-2, piece_y+1),
+                         (piece_x+1, piece_y-2),
+                         (piece_x+1, piece_y+2),
+                         (piece_x-1, piece_y-2),
+                         (piece_x-1, piece_y+2)]
+
+                for move in moves:
+                    x, y = move
+                    if (0 <= x <=7) and (0 <= y <=7):
+                        if self.board[x][y].piece:
+                            if self.board[x][y].piece.color != piece.color:
+                                self.add_if_not_check(valid_moves,(x, y))
+                            continue
+
+                        self.add_if_not_check(valid_moves, (x,y))
+
             case "Bishop":
                 for i in range(piece_x+1, 8):
                     
