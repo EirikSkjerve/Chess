@@ -63,18 +63,25 @@ def get_tile_clicked(event):
 
 def handle_tile_click(tile_cliked):
     tile = gameboard.get(tile_cliked)
-    if tile.piece:
+    if len(piece_selected) == 2:
+        if tile.coordinate in move_indicator:
+            gameboard.move_piece(piece_selected[0],piece_selected[1], tile.coordinate)
+        move_indicator.clear()
+        piece_selected.clear()
+    print(piece_selected)
+    if tile.piece and len(piece_selected)!=2:
         piece = tile.piece
+        piece_selected.append(piece)
+        piece_selected.append(tile.coordinate)
         print(f"Piece {piece.name} on tile {tile.coordinate}. Valid moves are: {', '.join(gameboard.get_valid_moves(tile.coordinate))}")
         move_indicator.clear()
         for x in gameboard.get_valid_moves(tile.coordinate):
             move_indicator.append(x)
 
-    else:
-        move_indicator.clear()
 
 def main():
     global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, gameboard, font, move_indicator
+    global piece_selected
     SCREEN_WIDTH = 1300
     SCREEN_HEIGHT = 700
     dark_square_color = (64, 64, 64)
@@ -86,7 +93,7 @@ def main():
     BOARD_DIM = SQUARE_SIZE*8
     
     move_indicator = []
-
+    piece_selected = []
     # initialize the (empty) game board
     gameboard = Board(SQUARE_SIZE, OFFSET_X, OFFSET_Y)
     whitePawn = Pawn("w")
@@ -95,11 +102,11 @@ def main():
     blackBishop = Bishop("b")
     gameboard.board[3][1].set_piece(whitePawn)
     gameboard.board[2][3].set_piece(blackPawn)
-    gameboard.board[4][3].set_piece(blackPawn)
-    gameboard.board[5][2].set_piece(whiteRook)
-    gameboard.board[6][4].set_piece(blackBishop)
-    gameboard.board[3][3].set_piece(blackBishop)
-    gameboard.board[1][2].set_piece(blackBishop)
+    #gameboard.board[4][3].set_piece(blackPawn)
+    #gameboard.board[5][2].set_piece(whiteRook)
+    #gameboard.board[6][4].set_piece(blackBishop)
+    #gameboard.board[3][3].set_piece(blackBishop)
+    #gameboard.board[1][2].set_piece(blackBishop)
 
     # initialize pygame instance
     pygame.init()
@@ -119,6 +126,10 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 tile_cliked_down = get_tile_clicked(event)
                 handle_tile_click(tile_cliked_down)
+
+            if event.type == pygame.K_c:
+                move_indicator.clear()
+                piece_selected.clear()
         # fill the base color in the window
         SCREEN.fill((40, 40, 40))
 

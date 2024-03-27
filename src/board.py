@@ -55,6 +55,12 @@ class Board:
         x, y = coors
         return self.num_to_let.get(x) + str(y+1)
 
+    def move_piece(self, piece, source, dest):
+        x, y = self.strCoor_to_numCoor(dest)
+        self.board[x][y].set_piece(piece)
+        a, b = self.strCoor_to_numCoor(source)
+        self.board[a][b].remove_piece()
+
     def get_valid_moves(self, piece_coor):
         '''
         Get valid moves for a piece on a given coordinate
@@ -241,3 +247,5 @@ class Tile():
 
     def set_piece(self, piece):
         self.piece = piece
+    def remove_piece(self):
+        self.piece = None
