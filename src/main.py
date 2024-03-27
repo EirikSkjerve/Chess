@@ -44,7 +44,7 @@ def draw_board():
                 SCREEN.blit(piece_surf, (tile_down-50, tile_right-50))
 
                 # display name of piece
-                piece_text = font.render(piece.name[:1], True, (255,255,255) if piece.color == "b" else (10,10,10))
+                piece_text = font.render(piece.name[:2], True, (255,255,255) if piece.color == "b" else (10,10,10))
                 piece_text_rect = piece_text.get_rect()
                 piece_text_rect.center = (tile_down-35, tile_right-35)
                 SCREEN.blit(piece_text, piece_text_rect)
