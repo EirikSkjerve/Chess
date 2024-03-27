@@ -1,6 +1,6 @@
 import pygame 
 from board import Board
-from piece import Piece, Pawn, Bishop, Rook
+from piece import Piece, Pawn, Bishop, Rook, Knight
 
 '''
 Main loop for the window
@@ -48,6 +48,29 @@ def draw_board():
                 piece_text_rect = piece_text.get_rect()
                 piece_text_rect.center = (tile_down-35, tile_right-35)
                 SCREEN.blit(piece_text, piece_text_rect)
+
+def draw_game_info():
+    font = pygame.font.Font('C:/Users/eirik/OneDrive - University of Bergen/Chess/src/Utils/arial.ttf', 18)
+
+    info_box = pygame.Rect(8*SQUARE_SIZE + 2*OFFSET_X, OFFSET_Y, 7*SQUARE_SIZE, 8*SQUARE_SIZE)
+    pygame.draw.rect(SCREEN, (80,80,80), info_box, 7*SQUARE_SIZE)
+    if len(piece_selected) == 2:
+        move_string_piece = f"Valid moves for {piece_selected[0].name} at {piece_selected[1]}:"
+        move_string_pos = f"{', '.join([x for x in move_indicator])}"
+    else:
+        move_string_piece = ""
+        move_string_pos = ""
+    move_text = font.render(move_string_piece, True, (255,255,255))
+    move_text_2 = font.render(move_string_pos, True, (255,255,255))
+    move_text_rect = move_text.get_rect()
+    text_width = move_text_rect.width
+    move_text_rect_2 = move_text_2.get_rect()
+    text_2_width = move_text_rect_2.width
+
+    move_text_rect.center = (8*SQUARE_SIZE + 2*OFFSET_X + text_width//2, OFFSET_Y+10)
+    move_text_rect_2.center = (8*SQUARE_SIZE + 2*OFFSET_X + text_2_width//2, OFFSET_Y+10+move_text_2.get_height()+5)
+    SCREEN.blit(move_text, move_text_rect)
+    SCREEN.blit(move_text_2, move_text_rect_2)
 
 # returns the board coordinate if a tile was clicked
 def get_tile_clicked(event):
@@ -105,6 +128,7 @@ def main():
     blackPawn = Pawn("b")
     whiteRook = Rook("w")
     blackBishop = Bishop("b")
+    whiteKnight = Knight("w")
     gameboard.board[7][1].set_piece(whitePawn)
     gameboard.board[0][3].set_piece(blackPawn)
     gameboard.board[4][3].set_piece(blackPawn)
@@ -112,6 +136,7 @@ def main():
     gameboard.board[6][4].set_piece(blackBishop)
     gameboard.board[3][3].set_piece(blackBishop)
     gameboard.board[1][2].set_piece(blackBishop)
+    gameboard.board[3][2].set_piece(whiteKnight)
 
     # initialize pygame instance
     pygame.init()
@@ -140,6 +165,7 @@ def main():
         SCREEN.fill((40, 40, 40))
 
         draw_board()
+        draw_game_info()
         pygame.display.update()
 
         # TODO display a menu

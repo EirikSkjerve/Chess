@@ -38,8 +38,9 @@ class Pawn(Piece):
         self.color = color
 
 class Knight(Piece):
-    def __init__(self):
-        pass
+    def __init__(self, color):
+        self.name = "Knight"
+        self.color = color
 
 class Bishop(Piece):
     def __init__(self, color):
