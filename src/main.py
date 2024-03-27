@@ -105,10 +105,52 @@ def handle_tile_click(tile_cliked):
         for x in gameboard.get_valid_moves(tile.coordinate):
             move_indicator.append(x)
 
+def initialize_board():
+    for i in range(8):
+        whitePawn = Pawn("w")
+        blackPawn = Pawn("b")
+        gameboard.board[i][1].set_piece(whitePawn)
+        gameboard.board[i][6].set_piece(blackPawn)
+
+    whiteKnight = Knight("w")
+    blackKnight = Knight("b")
+    whiteBishop = Bishop("w")
+    blackBishop = Bishop("b")
+    whiteRook = Rook("w")
+    blackRook = Rook("b")
+    whiteQueen = Queen("w")
+    blackQueen = Queen("b")
+    whiteKing = King("w")
+    blackKing = King("b")
+
+    gameboard.board[0][0].set_piece(whiteRook)
+    gameboard.board[7][0].set_piece(whiteRook)
+
+    gameboard.board[1][0].set_piece(whiteKnight)
+    gameboard.board[6][0].set_piece(whiteKnight)
+
+    gameboard.board[2][0].set_piece(whiteBishop)
+    gameboard.board[5][0].set_piece(whiteBishop)
+
+    gameboard.board[3][0].set_piece(whiteQueen)
+    gameboard.board[4][0].set_piece(whiteKing)
+
+    gameboard.board[0][7].set_piece(blackRook)
+    gameboard.board[7][7].set_piece(blackRook)
+
+    gameboard.board[1][7].set_piece(blackKnight)
+    gameboard.board[6][7].set_piece(blackKnight)
+
+    gameboard.board[2][7].set_piece(blackBishop)
+    gameboard.board[5][7].set_piece(blackBishop)
+
+    gameboard.board[3][7].set_piece(blackQueen)
+    gameboard.board[4][7].set_piece(blackKing)
+
 
 def main():
     global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, gameboard, font, move_indicator
-    global piece_selected, turn
+    global piece_selected, turn, beaten_pieces
     SCREEN_WIDTH = 1300
     SCREEN_HEIGHT = 700
     dark_square_color = (64, 64, 64)
@@ -124,17 +166,7 @@ def main():
     turn = "w"
     # initialize the (empty) game board
     gameboard = Board(SQUARE_SIZE, OFFSET_X, OFFSET_Y)
-    whitePawn = Pawn("w")
-    blackPawn = Pawn("b")
-    whiteRook = Rook("w")
-    blackBishop = Bishop("b")
-    whiteKnight = Knight("w")
-    blackKing = King("b")
-    whiteQueen = Queen("w")
-    gameboard.board[0][0].set_piece(whiteQueen)
-    #gameboard.board[0][7].set_piece(whiteRook)
-    #gameboard.board[7][0].set_piece(whiteRook)
-    #gameboard.board[7][7].set_piece(whiteRook)
+    initialize_board()
 
     # initialize pygame instance
     pygame.init()
