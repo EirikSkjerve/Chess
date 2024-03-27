@@ -77,8 +77,14 @@ class Board:
             case "Pawn":
 
                 if piece.color=="b":
-                    diag_l = self.board[piece_x-1][piece_y-1]
-                    diag_r = self.board[piece_x+1][piece_y-1]
+                    diag_l, diag_r = None, None
+                    if piece_y == 0:
+                        return valid_moves
+                    if piece_y > 1:
+                        if piece_x > 0:
+                            diag_l = self.board[piece_x-1][piece_y-1]
+                        if piece_x < 7:
+                            diag_r = self.board[piece_x+1][piece_y-1]
                     # check if there is a piece in front of the pawn
                     if not self.board[piece_x][piece_y-1].piece:
                         # pawn moves 2 squares on first move
@@ -88,14 +94,21 @@ class Board:
                         self.add_if_not_check(valid_moves, (piece_x, piece_y-1))
 
                     # if diagonal piece is of opposite color, pawn can take
-                    if diag_l.piece and diag_l.piece.color != piece.color:
+                    if diag_l and diag_l.piece and diag_l.piece.color != piece.color:
                         self.add_if_not_check(valid_moves, diag_l.coordinate)
-                    if diag_r.piece and diag_r.piece.color != piece.color:
+                    if diag_r and diag_r.piece and diag_r.piece.color != piece.color:
                         self.add_if_not_check(valid_moves, diag_r.coordinate)
 
                 if piece.color=="w":
-                    diag_l = self.board[piece_x-1][piece_y+1]
-                    diag_r = self.board[piece_x+1][piece_y+1]
+                    diag_l, diag_r = None, None
+                    if piece_y == 7:
+                        return valid_moves
+                    if piece_y < 7:
+                        if piece_x > 0:
+                            diag_l = self.board[piece_x-1][piece_y+1]
+                        if piece_x < 7:
+                            diag_r = self.board[piece_x+1][piece_y+1]
+
                     if not self.board[piece_x][piece_y+1].piece:
 
                         # pawn moves 2 squares on first move
@@ -105,9 +118,9 @@ class Board:
                         self.add_if_not_check(valid_moves, (piece_x, piece_y+1))
 
                     # if diagonal piece is of opposite color, pawn can take
-                    if diag_l.piece and diag_l.piece.color != piece.color:
+                    if diag_l and diag_l.piece and diag_l.piece.color != piece.color:
                         self.add_if_not_check(valid_moves, diag_l.coordinate)
-                    if diag_r.piece and diag_r.piece.color != piece.color:
+                    if diag_r and diag_r.piece and diag_r.piece.color != piece.color:
                         self.add_if_not_check(valid_moves, diag_r.coordinate)
 
 
