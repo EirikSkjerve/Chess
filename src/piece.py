@@ -53,8 +53,9 @@ class Rook(Piece):
         self.color = color
 
 class Queen(Piece):
-    def __init__(self):
-        pass
+    def __init__(self, color):
+        self.name = "Queen"
+        self.color = color
 
 class King(Piece):
     def __init__(self, color):

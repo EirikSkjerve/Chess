@@ -60,6 +60,9 @@ class Board:
         self.board[x][y].set_piece(piece)
         a, b = self.strCoor_to_numCoor(source)
         self.board[a][b].remove_piece()
+    
+    def is_on_board(self, x, y):
+        return ((0 <= x <= 7) and (0 <= y <= 7))
 
     def get_valid_moves(self, piece_coor):
         '''
@@ -136,7 +139,7 @@ class Board:
 
                 for move in moves:
                     x, y = move
-                    if (0 <= x <=7) and (0 <= y <=7):
+                    if self.is_on_board(x, y):
                         if self.board[x][y].piece:
                             if self.board[x][y].piece.color != piece.color:
                                 self.add_if_not_check(valid_moves,(x, y))
@@ -148,7 +151,7 @@ class Board:
                 for i in range(piece_x+1, 8):
                     
                     y_temp = piece_y+(piece_x-i)
-                    if not (0 <= y_temp <= 7):
+                    if not self.is_on_board(i, y_temp):
                         continue
                     if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
                         break
@@ -161,7 +164,7 @@ class Board:
                 for i in range(piece_x-1, -1,-1):
                     
                     y_temp = piece_y-(piece_x-i)
-                    if not (0 <= y_temp <= 7):
+                    if not self.is_on_board(i, y_temp):
                         continue
                     if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
                         break
@@ -174,7 +177,7 @@ class Board:
                 for i in range(piece_x+1, 8):
                     
                     y_temp = piece_y-(piece_x-i)
-                    if not (0 <= y_temp <= 7):
+                    if not self.is_on_board(i, y_temp):
                         continue
                     if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
                         break
@@ -187,7 +190,7 @@ class Board:
                 for i in range(piece_x-1, -1,-1):
                     
                     y_temp = piece_y+(piece_x-i)
-                    if not (0 <= y_temp <= 7):
+                    if not self.is_on_board(i, y_temp):
                         continue
                     if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
                         break
@@ -206,7 +209,8 @@ class Board:
                     if self.board[i][piece_y].piece and self.board[i][piece_y].piece.color == piece.color:
                         break
 
-                    self.add_if_not_check(valid_moves, (i, piece_y))
+                    if self.is_on_board(i, piece_y):
+                        self.add_if_not_check(valid_moves, (i, piece_y))
                     # cannot move through another piece
                     if self.board[i][piece_y].piece:
                         break
@@ -216,7 +220,8 @@ class Board:
                     if self.board[i][piece_y].piece and self.board[i][piece_y].piece.color == piece.color:
                         break
 
-                    self.add_if_not_check(valid_moves, (i, piece_y))
+                    if self.is_on_board(i, piece_y):
+                        self.add_if_not_check(valid_moves, (i, piece_y))
                     if self.board[i][piece_y].piece:
                         break
 
@@ -226,7 +231,8 @@ class Board:
                     if self.board[piece_x][j].piece and self.board[i][piece_y].piece.color == piece.color:
                         break
 
-                    self.add_if_not_check(valid_moves, (piece_x, j))
+                    if self.is_on_board(piece_x, j):
+                        self.add_if_not_check(valid_moves, (piece_x, j))
                     if self.board[piece_x][j].piece:
                         break
 
@@ -235,14 +241,108 @@ class Board:
                     if self.board[piece_x][j].piece and self.board[i][piece_y].piece.color == piece.color:
                         break
 
-
-                    self.add_if_not_check(valid_moves, (piece_x, j))
+                    if self.is_on_board(piece_x, j):
+                        self.add_if_not_check(valid_moves, (piece_x, j))
                     if self.board[piece_x][j].piece:
                         break
 
 
             case "Queen":
-                pass
+                # check to the right
+                for i in range(piece_x+1, 8):
+                    
+                    if self.board[i][piece_y].piece and self.board[i][piece_y].piece.color == piece.color:
+                        break
+
+                    if self.is_on_board(i, piece_y):
+                        self.add_if_not_check(valid_moves, (i, piece_y))
+                    # cannot move through another piece
+                    if self.board[i][piece_y].piece:
+                        break
+
+                # check to the left
+                for i in range(piece_x-1, -1, -1):
+                    if self.board[i][piece_y].piece and self.board[i][piece_y].piece.color == piece.color:
+                        break
+
+                    if self.is_on_board(i, piece_y):
+                        self.add_if_not_check(valid_moves, (i, piece_y))
+                    if self.board[i][piece_y].piece:
+                        break
+
+                # check upwards
+                for j in range(piece_y+1, 8):
+ 
+                    if self.board[piece_x][j].piece and self.board[i][piece_y].piece.color == piece.color:
+                        break
+
+                    if self.is_on_board(piece_x, j):
+                        self.add_if_not_check(valid_moves, (piece_x, j))
+                    if self.board[piece_x][j].piece:
+                        break
+
+                # check below
+                for j in range(piece_y-1, -1,-1):
+                    if self.board[piece_x][j].piece and self.board[i][piece_y].piece.color == piece.color:
+                        break
+
+                    if self.is_on_board(piece_x, j):
+                        self.add_if_not_check(valid_moves, (piece_x, j))
+                    if self.board[piece_x][j].piece:
+                        break
+
+                for i in range(piece_x+1, 8):
+                    
+                    y_temp = piece_y+(piece_x-i)
+                    if not self.is_on_board(i, y_temp):
+                        continue
+                    if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (i, y_temp))
+                    # cannot move through another piece
+                    if self.board[i][y_temp].piece:
+                        break
+
+                for i in range(piece_x-1, -1,-1):
+                    
+                    y_temp = piece_y-(piece_x-i)
+                    if not self.is_on_board(i, y_temp):
+                        continue
+                    if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (i, y_temp))
+                    # cannot move through another piece
+                    if self.board[i][y_temp].piece:
+                        break
+
+                for i in range(piece_x+1, 8):
+                    
+                    y_temp = piece_y-(piece_x-i)
+                    if not self.is_on_board(i, y_temp):
+                        continue
+                    if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (i, y_temp))
+                    # cannot move through another piece
+                    if self.board[i][y_temp].piece:
+                        break
+
+                for i in range(piece_x-1, -1,-1):
+                    
+                    y_temp = piece_y+(piece_x-i)
+                    if not self.is_on_board(i, y_temp):
+                        continue
+                    if self.board[i][y_temp].piece is not None and self.board[i][y_temp].piece.color == piece.color:
+                        break
+
+                    self.add_if_not_check(valid_moves, (i, y_temp))
+                    # cannot move through another piece
+                    if self.board[i][y_temp].piece:
+                        break
+
             case "King":
                 moves = [(piece_x+1, piece_y+1),
                          (piece_x+1, piece_y),
