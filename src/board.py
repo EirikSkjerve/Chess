@@ -244,8 +244,25 @@ class Board:
             case "Queen":
                 pass
             case "King":
-                pass
+                moves = [(piece_x+1, piece_y+1),
+                         (piece_x+1, piece_y),
+                         (piece_x+1, piece_y-1),
+                         (piece_x, piece_y+1),
+                         (piece_x, piece_y-1),
+                         (piece_x-1, piece_y+1),
+                         (piece_x-1, piece_y),
+                         (piece_x-1, piece_y-1)]
         
+                for move in moves:
+                    x, y = move
+                    if (0 <= x <=7) and (0 <= y <=7):
+                        if self.board[x][y].piece:
+                            if self.board[x][y].piece.color != piece.color:
+                                self.add_if_not_check(valid_moves,(x, y))
+                            continue
+
+                        self.add_if_not_check(valid_moves, (x,y))
+
         return valid_moves
 
     def get_all_valid_moves(self, color):

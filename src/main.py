@@ -1,6 +1,6 @@
 import pygame 
 from board import Board
-from piece import Piece, Pawn, Bishop, Rook, Knight
+from piece import Piece, Pawn, Bishop, Rook, Knight, King
 
 '''
 Main loop for the window
@@ -129,6 +129,7 @@ def main():
     whiteRook = Rook("w")
     blackBishop = Bishop("b")
     whiteKnight = Knight("w")
+    blackKing = King("b")
     gameboard.board[7][1].set_piece(whitePawn)
     gameboard.board[0][3].set_piece(blackPawn)
     gameboard.board[4][3].set_piece(blackPawn)
@@ -137,6 +138,7 @@ def main():
     gameboard.board[3][3].set_piece(blackBishop)
     gameboard.board[1][2].set_piece(blackBishop)
     gameboard.board[3][2].set_piece(whiteKnight)
+    gameboard.board[7][7].set_piece(blackKing)
 
     # initialize pygame instance
     pygame.init()

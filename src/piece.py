@@ -57,5 +57,6 @@ class Queen(Piece):
         pass
 
 class King(Piece):
-    def __init__(self):
-        pass
+    def __init__(self, color):
+        self.name = "King"
+        self.color = color
