@@ -49,6 +49,7 @@ def draw_board():
                 piece_text_rect.center = (tile_down-35, tile_right-35)
                 SCREEN.blit(piece_text, piece_text_rect)
 
+# returns the board coordinate if a tile was clicked
 def get_tile_clicked(event):
     event_dict = event.dict
     mouse_pos_x, mouse_pos_y = event_dict.get('pos')
@@ -61,15 +62,18 @@ def get_tile_clicked(event):
             if x1 < mouse_pos_x < x2 and y1 < mouse_pos_y < y2:
                 return(tile.coordinate)
 
+# selects a piece or moves a piece if already selected.
 def handle_tile_click(tile_cliked):
+    moved = False
     tile = gameboard.get(tile_cliked)
     if len(piece_selected) == 2:
-        if tile.coordinate in move_indicator:
+        if tile.coordinate in move_indicator and tile.coordinate != piece_selected[1]:
             gameboard.move_piece(piece_selected[0],piece_selected[1], tile.coordinate)
+            moved = True
         move_indicator.clear()
         piece_selected.clear()
-    print(piece_selected)
-    if tile.piece and len(piece_selected)!=2:
+
+    if tile.piece and len(piece_selected)!=2 and not moved:
         piece = tile.piece
         piece_selected.append(piece)
         piece_selected.append(tile.coordinate)
@@ -81,7 +85,7 @@ def handle_tile_click(tile_cliked):
 
 def main():
     global SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN, dark_square_color, light_square_color, SQUARE_SIZE, OFFSET_X, OFFSET_Y, BOARD_DIM, gameboard, font, move_indicator
-    global piece_selected
+    global piece_selected, turn
     SCREEN_WIDTH = 1300
     SCREEN_HEIGHT = 700
     dark_square_color = (64, 64, 64)
@@ -94,19 +98,20 @@ def main():
     
     move_indicator = []
     piece_selected = []
+    turn = "w"
     # initialize the (empty) game board
     gameboard = Board(SQUARE_SIZE, OFFSET_X, OFFSET_Y)
     whitePawn = Pawn("w")
     blackPawn = Pawn("b")
     whiteRook = Rook("w")
     blackBishop = Bishop("b")
-    gameboard.board[3][1].set_piece(whitePawn)
-    gameboard.board[2][3].set_piece(blackPawn)
-    #gameboard.board[4][3].set_piece(blackPawn)
-    #gameboard.board[5][2].set_piece(whiteRook)
-    #gameboard.board[6][4].set_piece(blackBishop)
-    #gameboard.board[3][3].set_piece(blackBishop)
-    #gameboard.board[1][2].set_piece(blackBishop)
+    gameboard.board[7][1].set_piece(whitePawn)
+    gameboard.board[0][3].set_piece(blackPawn)
+    gameboard.board[4][3].set_piece(blackPawn)
+    gameboard.board[5][2].set_piece(whiteRook)
+    gameboard.board[6][4].set_piece(blackBishop)
+    gameboard.board[3][3].set_piece(blackBishop)
+    gameboard.board[1][2].set_piece(blackBishop)
 
     # initialize pygame instance
     pygame.init()
@@ -125,7 +130,8 @@ def main():
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 tile_cliked_down = get_tile_clicked(event)
-                handle_tile_click(tile_cliked_down)
+                if tile_cliked_down:
+                    handle_tile_click(tile_cliked_down)
 
             if event.type == pygame.K_c:
                 move_indicator.clear()
